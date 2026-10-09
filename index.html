@@ -106,7 +106,7 @@ footer { text-align:center; color:var(--muted); font-size:12px; padding:35px 15p
   <div class="grid section" style="grid-template-columns:repeat(2,minmax(0,1fr))">
     <div class="card">
       <h2>주가 추이</h2>
-      <div class="chart-placeholder">
+      <div class="chart-placeholder" id="stockChart">
         실제 주가 차트는 데이터 연결 후 표시됩니다.
       </div>
     </div>
@@ -171,6 +171,31 @@ async function searchStock() {
 
     const data = await response.json();
 
+const chart = document.getElementById('stockChart');
+chart.innerHTML = '';
+
+const values = data.history || [];
+
+if (values.length > 0) {
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const points = values.map((value, index) => {
+    const x = index * 400 / (values.length - 1);
+    const y = 140 - ((value - min) / (max - min || 1)) * 120;
+    return `${x},${y}`;
+  }).join(' ');
+
+  chart.innerHTML = `
+    <svg viewBox="0 0 400 160" width="100%" role="img"
+         aria-label="최근 주가 그래프">
+      <polyline points="${points}" fill="none"
+        stroke="#38bdf8" stroke-width="3"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div>최근 거래일 ${values.length}일 주가 흐름</div>
+  `;
+}
+    
     document.getElementById('price').textContent =
       Number(data.last_close).toLocaleString('ko-KR') + '원';
 
