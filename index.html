@@ -136,12 +136,55 @@ function choose(code) {
   document.getElementById('ticker').value = code;
   searchStock();
 }
-function searchStock() {
+
+async function searchStock() {
   const code = document.getElementById('ticker').value.trim();
+
   if (!code) {
     alert('종목 코드를 입력해 주세요.');
     return;
   }
+
+  const names = {
+    '005930.KS': '삼성전자',
+    '000660.KS': 'SK하이닉스',
+    'AAPL': 'Apple'
+  };
+
+  document.getElementById('stockName').textContent =
+    names[code] || '선택 종목';
+  document.getElementById('stockCode').textContent = code;
+  document.getElementById('price').textContent = '불러오는 중...';
+  document.getElementById('prediction').textContent = '계산 중...';
+  document.getElementById('message').textContent = 'AI가 주가 데이터를 분석하고 있습니다.';
+
+  try {
+    const response = await fetch(
+      `https://neuron-stock-ai.onrender.com/api/predict?ticker=${encodeURIComponent(code)}`
+    );
+
+    if (!response.ok) {
+      throw new Error('서버에서 데이터를 가져오지 못했습니다.');
+    }
+
+    const data = await response.json();
+
+    document.getElementById('price').textContent =
+      Number(data.last_close).toLocaleString('ko-KR') + '원';
+
+    document.getElementById('prediction').textContent =
+      Number(data.predicted_next_close).toLocaleString('ko-KR') + '원';
+
+    document.getElementById('message').textContent = data.message;
+  } catch (error) {
+    document.getElementById('price').textContent = '--';
+    document.getElementById('prediction').textContent = '--';
+    document.getElementById('message').textContent =
+      '데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.';
+  }
+}
+
+
   const names = {
     '005930.KS':'삼성전자',
     '000660.KS':'SK하이닉스',
