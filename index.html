@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURON STOCK | AI Market Intelligence</title>
+<style>
+:root {
+  --bg:#090d18; --panel:#111827; --line:#253047;
+  --text:#f1f5f9; --muted:#8b98ad;
+  --green:#35d49a; --blue:#6488ff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Arial,"Malgun Gothic",sans-serif;
+}
+header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:22px 7%; border-bottom:1px solid var(--line);
+}
+.logo { font-size:20px; font-weight:800; letter-spacing:1px; }
+.logo span { color:var(--blue); }
+.status { color:var(--green); font-size:12px; }
+main { max-width:1100px; margin:40px auto; padding:0 22px; }
+h1 { font-size:32px; margin-bottom:8px; }
+.sub { color:var(--muted); margin-bottom:30px; }
+.toolbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }
+input,button {
+  border:1px solid var(--line); border-radius:10px;
+  padding:13px 16px; font-size:14px;
+}
+input { background:var(--panel); color:white; flex:1; min-width:180px; }
+button { cursor:pointer; background:#202b42; color:white; }
+button:hover { border-color:var(--blue); }
+.primary { background:var(--blue); border-color:var(--blue); }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.card {
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:16px; padding:22px; min-width:0;
+}
+.label { color:var(--muted); font-size:13px; margin-bottom:15px; }
+.value { font-size:25px; font-weight:700; }
+.note { color:var(--muted); font-size:12px; margin-top:10px; }
+.section { margin-top:20px; }
+.section h2 { font-size:17px; margin:0 0 18px; }
+.chart-placeholder {
+  height:180px; display:flex; align-items:center; justify-content:center;
+  border:1px dashed #35415a; border-radius:12px;
+  color:var(--muted); font-size:13px; text-align:center; padding:20px;
+}
+.ai-panel {
+  background:linear-gradient(135deg,#17223a,#111827);
+  border-color:#354875;
+}
+.ai-status { color:#9eb4ff; font-size:13px; margin-bottom:14px; }
+footer { text-align:center; color:var(--muted); font-size:12px; padding:35px 15px; }
+@media(max-width:700px) {
+  header { padding:18px 20px; }
+  main { margin-top:28px; }
+  h1 { font-size:25px; }
+  .grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">NEURON <span>STOCK</span></div>
+  <div class="status">● AI LAB</div>
+</header>
+
+<main>
+  <h1>AI Market Intelligence</h1>
+  <p class="sub">데이터로 시장을 분석하고, 인공지능으로 내일을 예측합니다.</p>
+
+  <div class="toolbar">
+    <input id="ticker" value="005930.KS"
+      placeholder="종목 코드 (예: 005930.KS)">
+    <button onclick="choose('005930.KS')">삼성전자</button>
+    <button onclick="choose('000660.KS')">SK하이닉스</button>
+    <button onclick="choose('AAPL')">Apple</button>
+    <button class="primary" onclick="searchStock()">종목 선택</button>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="label">선택 종목</div>
+      <div class="value" id="stockName">삼성전자</div>
+      <div class="note" id="stockCode">005930.KS</div>
+    </div>
+    <div class="card">
+      <div class="label">최근 종가</div>
+      <div class="value" id="price">--</div>
+      <div class="note">실제 주가 데이터 연결 예정</div>
+    </div>
+    <div class="card">
+      <div class="label">AI 다음 거래일 예측</div>
+      <div class="value" id="prediction">--</div>
+      <div class="note">AI 모델 연결 후 표시됩니다</div>
+    </div>
+  </div>
+
+  <div class="grid section" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+    <div class="card">
+      <h2>주가 추이</h2>
+      <div class="chart-placeholder">
+        실제 주가 차트는 데이터 연결 후 표시됩니다.
+      </div>
+    </div>
+    <div class="card ai-panel">
+      <h2>Neural Network AI</h2>
+      <div class="ai-status">● 모델 연결 대기 중</div>
+      <p>과거 주가 데이터를 학습해 다음 거래일 종가를 추정합니다.</p>
+      <div class="note">모델: 인공신경망 (MLP)</div>
+      <div class="note">입력: 과거 10거래일의 종가 및 거래량</div>
+      <div class="note">평가 지표: MAE · RMSE</div>
+    </div>
+  </div>
+
+  <div class="card section">
+    <h2>분석 기록</h2>
+    <p class="note" id="message">
+      사이트 화면 준비 완료. 실제 데이터와 AI를 다음 단계에서 연결합니다.
+    </p>
+  </div>
+</main>
+
+<footer>
+  NEURON STOCK · AI 기반 학습용 주가 예측 프로젝트<br>
+  AI 예측은 추정치이며 실제 투자 수익을 보장하지 않습니다.
+</footer>
+
+<script>
+function choose(code) {
+  document.getElementById('ticker').value = code;
+  searchStock();
+}
+function searchStock() {
+  const code = document.getElementById('ticker').value.trim();
+  if (!code) {
+    alert('종목 코드를 입력해 주세요.');
+    return;
+  }
+  const names = {
+    '005930.KS':'삼성전자',
+    '000660.KS':'SK하이닉스',
+    'AAPL':'Apple'
+  };
+  document.getElementById('stockName').textContent =
+    names[code] || '선택 종목';
+  document.getElementById('stockCode').textContent = code;
+  document.getElementById('price').textContent = '--';
+  document.getElementById('prediction').textContent = '--';
+  document.getElementById('message').textContent =
+    code + ' 선택 완료. 실제 데이터 연결은 다음 단계에서 진행합니다.';
+}
+</script>
+</body>
+</html>
