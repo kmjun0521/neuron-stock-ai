@@ -112,11 +112,6 @@ def predict(ticker: str = "005930.KS"):
         # 테스트 데이터에서 예측 성능을 평가합니다.
         test_pred_scaled = model.predict(X_test, verbose=0).reshape(-1)
 
-        test_pred = (
-            test_pred_scaled * scaler.scale_[0]
-            + scaler.min_[0] * 0
-        )
-
         # MinMaxScaler의 역변환을 정확하게 적용합니다.
         test_pred = (
             test_pred_scaled - scaler.min_[0]
