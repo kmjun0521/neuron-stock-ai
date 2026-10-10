@@ -99,6 +99,7 @@ footer { text-align:center; color:var(--muted); font-size:12px; padding:35px 15p
       <div class="label">AI 다음 거래일 예측</div>
       <div class="value" id="prediction">--</div>
       <div class="note" id="changePercent">예측 변동률: --%</div>
+      <div class="note" id="modelError">AI 예측 오차(MAE): 계산 중...</div>
       <div class="note">최근 주가 데이터를 분석한 AI 예측 결과입니다. 실제 주가와 차이가 날 수 있습니다.
 </div>
     </div>
@@ -230,6 +231,9 @@ const changeText =
 document.getElementById('changePercent').textContent =
   `예측 변동률: ${changeText}`;
 
+document.getElementById('modelError').textContent =
+  `AI 예측 오차(MAE): ${Number(data.mae).toLocaleString('ko-KR')}원`;
+    
 document.getElementById('message').textContent =
   data.message;
     
