@@ -219,6 +219,16 @@ if (values.length > 1) {
       Number(data.predicted_next_close).toLocaleString('ko-KR') + '원';
 
     document.getElementById('message').textContent = data.message;
+    const changePercent =
+  ((Number(data.predicted_next_close) - Number(data.last_close))
+  / Number(data.last_close)) * 100;
+
+const changeText =
+  `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%`;
+
+document.getElementById('message').textContent =
+  `${data.message} (예측 변동률: ${changeText})`;
+    
   } catch (error) {
     document.getElementById('price').textContent = '--';
     document.getElementById('prediction').textContent = '--';
