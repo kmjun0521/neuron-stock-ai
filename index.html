@@ -179,8 +179,8 @@ chart.innerHTML = '';
 const values = data.history || [];
 
 if (values.length > 1) {
-  const width = 400;
-  const height = 180;
+  const width = 460;
+  const height = 220;
   const pad = { top: 18, right: 12, bottom: 22, left: 12 };
 
   const min = Math.min(...values);
@@ -207,8 +207,8 @@ if (values.length > 1) {
         stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="${last[0]}" cy="${last[1]}" r="5" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
     </svg>
-    
-<div style="display:flex;justify-content:space-between;align-items:center;width:100%;box-sizing:border-box;font-size:11px;color:#94a3b8;margin-top:8px;padding:0 12px;">
+   
+<div style="display:flex;justify-content:space-between;width:100%;box-sizing:border-box;font-size:11px;color:#94a3b8;margin-top:6px;padding:0 4px;">
   <span>과거</span>
   <span>최근 종가</span>
 </div>
